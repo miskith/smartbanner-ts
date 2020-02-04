@@ -1,6 +1,6 @@
 {
 	"name": "smartbanner-ts",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "Smartbanner library written using TS",
 	"author": "David Myška",
 	"license": "MIT",
@@ -12,7 +12,7 @@
 		"type": "git",
 		"url": "git+https://github.com/miskith/smartbanner-ts.git"
 	},
-	"main": "dist/js/smartbanner.min.js",
+	"main": "dist/index.js",
 	"types": "assets/ts/index.d.ts",
 	"scripts": {
 		"start": "webpack --config webpack.dev.js",

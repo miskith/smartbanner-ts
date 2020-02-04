@@ -16,6 +16,7 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"declaration": true,
+		"outDir": "./dist",
 		"strictNullChecks": false,
 		"lib": [
 			"dom",
