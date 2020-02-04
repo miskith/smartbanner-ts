@@ -11,6 +11,8 @@ module.exports = {
 		'smartbanner': [
 			// TS
 			'./assets/ts/components/smartbanner.ts',
+			// Scss
+			'./assets/scss/smartbanner.scss',
 		],
 	},
 	output: {

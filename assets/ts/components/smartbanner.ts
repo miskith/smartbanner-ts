@@ -1,6 +1,5 @@
 import crumbs from 'crumbsjs';
 import { smartbannerOptions } from '../interfaces/smartbannerOptions';
-require('../../scss/smartbanner.scss');
 
 export class SmartBanner
 {
