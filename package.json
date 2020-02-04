@@ -13,7 +13,6 @@
 		"url": "git+https://github.com/miskith/smartbanner-ts.git"
 	},
 	"main": "assets/ts/components/smartbanner.ts",
-	"private": true,
 	"scripts": {
 		"start": "webpack --config webpack.dev.js",
 		"build": "webpack --config webpack.prod.js",
