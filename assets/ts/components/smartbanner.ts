@@ -2,7 +2,7 @@ import crumbs from 'crumbsjs';
 import { smartbannerOptions } from '@interfaces/smartbannerOptions';
 require('../../scss/smartbanner.scss');
 
-export class SmartBanner
+export default class SmartBanner
 {
 	private node: Node = null;
 	private readonly storageKey = 'smartbanner-ts';
