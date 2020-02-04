@@ -1,6 +1,6 @@
 {
 	"name": "smartbanner-ts",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "Smartbanner library written using TS",
 	"author": "David Myška",
 	"license": "MIT",

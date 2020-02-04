@@ -1,4 +1,4 @@
-import { smartbannerOptions } from '@interfaces/smartbannerOptions';
+import { smartbannerOptions } from '../interfaces/smartbannerOptions';
 export declare class SmartBanner {
     private config;
     private node;
