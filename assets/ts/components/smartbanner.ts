@@ -1,5 +1,5 @@
 import crumbs from 'crumbsjs';
-import { smartbannerOptions } from '../interfaces/smartbannerOptions';
+import type { smartbannerOptions } from '../interfaces/smartbannerOptions';
 
 export class SmartBanner
 {
