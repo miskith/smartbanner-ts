@@ -1,7 +1,6 @@
 const merge = require('webpack-merge').merge;
 const common = require('./webpack.common.js');
 const TerserPlugin = require('terser-webpack-plugin');
-const WebpackDeepScopeAnalysisPlugin = require('webpack-deep-scope-plugin').default;
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = merge(common, {
@@ -37,6 +36,5 @@ module.exports = merge(common, {
 		],
 	},
 	plugins: [
-		new WebpackDeepScopeAnalysisPlugin(),
 	],
 });
