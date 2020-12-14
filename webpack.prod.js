@@ -6,18 +6,13 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = merge(common, {
 	mode: 'production',
-	devtool: 'source-map',
+	devtool: 'cheap-source-map',
 	optimization: {
 		usedExports: true,
 		minimizer: [
 			new TerserPlugin({
 				extractComments: true,
 				parallel: true,
-				sourceMap: true,
-				terserOptions: {
-					//ecma: 8,
-					wrap_iife: false,
-				},
 			}),
 			new OptimizeCSSAssetsPlugin({
 				cssProcessor: require('cssnano'),
