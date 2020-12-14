@@ -21,7 +21,8 @@
 		"test": "karma start"
 	},
 	"dependencies": {
-		"crumbsjs": "^0.2.1"
+		"crumbsjs": "^0.2.1",
+		"postcss": "^8.2.1"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.12.10",
