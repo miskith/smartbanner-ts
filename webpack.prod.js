@@ -1,7 +1,7 @@
 const merge = require('webpack-merge').merge;
 const common = require('./webpack.common.js');
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = merge(common, {
 	mode: 'production',
@@ -13,15 +13,7 @@ module.exports = merge(common, {
 				extractComments: true,
 				parallel: true,
 			}),
-			new OptimizeCSSAssetsPlugin({
-				cssProcessor: require('cssnano'),
-				cssProcessorOptions: {
-					map: {
-						inline: false,
-						annotation: true,
-					},
-				},
-			}),
+			new CssMinimizerPlugin(),
 		]
 	},
 	module: {
@@ -30,7 +22,7 @@ module.exports = merge(common, {
 				test: /\.js$/,
 				exclude: /node_modules/,
 				use: {
-					loader: "babel-loader",
+					loader: 'babel-loader',
 				},
 			},
 		],

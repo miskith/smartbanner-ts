@@ -2,8 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ImageminPlugin = require('imagemin-webpack-plugin').default;
-//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
 	entry: {
@@ -48,7 +46,6 @@ module.exports = {
 		]
 	},
 	plugins: [
-		//new BundleAnalyzerPlugin(),
 		new MiniCssExtractPlugin({
 			filename: 'css/[name].min.css',
 		}),
@@ -57,21 +54,6 @@ module.exports = {
 				postcss: [
 					autoprefixer(),
 				],
-			},
-		}),
-		new ImageminPlugin({
-			test: /\.(jpe?g|png|gif|svg)$/i,
-			optipng: null,
-			pngquant: {
-				optimizationLevel: 5,
-			},
-			jpegtran: {
-				progressive: true,
-			},
-			svgo: {
-				removeViewBox: false,
-				cleanupIDs: false,
-				removeDimensions: false,
 			},
 		}),
 	],
