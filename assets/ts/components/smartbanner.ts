@@ -1,4 +1,4 @@
-import crumbs from 'crumbsjs';
+import Cookies from 'js-cookie';
 import type { smartbannerOptions } from '../interfaces/smartbannerOptions';
 
 export class SmartBanner
@@ -23,43 +23,40 @@ export class SmartBanner
 		if (
 			(this.config.enable.android===false && this.config.enable.ios===false) ||
 			(!window.navigator || !window.navigator.userAgent || !(new RegExp(this.userAgents.join('|'), 'i')).test(window.navigator.userAgent))
-		)
+		) {
 			return;
+		}
 
-		if (this.config.autoInit===true && this.keepClosed===false)
+		if (this.config.autoInit===true && this.keepClosed===false) {
 			this.run();
+		}
 	}
 
 	private get userAgents():string[]
 	{
 		const userAgents = [];
-		if (this.config.enable.android===true)
+		if (this.config.enable.android===true) {
 			userAgents.push('Android');
-		if (this.config.enable.ios===true)
+		}
+		if (this.config.enable.ios===true) {
 			userAgents.push(...['iPhone', 'iPad', 'iPod']);
+		}
 
 		return userAgents;
 	}
 
 	private get keepClosed():boolean
 	{
-		const closeDateString = crumbs.ls.get(this.storageKey);
-		if (closeDateString===null)
-			return false;
+		const closeDateString = Cookies.get(this.storageKey);
 
-		const currentDate = new Date();
-		const closeDate = new Date(closeDateString);
-
-		if (isNaN(closeDate.getTime()))
-			return false;
-
-		return (currentDate.getTime()-closeDate.getTime())<this.storageLifeTime;
+		return !!(closeDateString)
 	}
 
 	public run(platform: 'android'|'ios'|null = null):void
 	{
-		if (platform===null)
+		if (platform===null) {
 			platform = (new RegExp('Android', 'i').test(window.navigator.userAgent) ? 'android' : 'ios');
+		}
 
 		this.node = this.generateNode(platform);
 		document.body.insertBefore(this.node, document.body.firstChild);
@@ -103,16 +100,14 @@ export class SmartBanner
 		title.innerText = (typeof this.config.title==='string' ? this.config.title : this.config.title[platform]);
 		container.appendChild(title);
 
-		if (!!this.config.author)
-		{
+		if (!!this.config.author) {
 			const author = document.createElement('div');
 			author.className = 'smartbanner-ts__author';
 			author.innerText = (typeof this.config.author==='string' ? this.config.author : this.config.author[platform]);
 			container.appendChild(author);
 		}
 
-		if (!!this.config.subTitle)
-		{
+		if (!!this.config.subTitle) {
 			const subTitle = document.createElement('div');
 			subTitle.className = 'smartbanner-ts__subtitle';
 			subTitle.innerText = (typeof this.config.subTitle==='string' ? this.config.subTitle : this.config.subTitle[platform]);
@@ -143,13 +138,16 @@ export class SmartBanner
 
 	private closeBanner():void
 	{
-		if (this.node===null)
+		if (this.node===null) {
 			return;
+		}
 
 		document.body.removeChild(this.node);
 		this.node = null;
 
-		crumbs.ls.set(this.storageKey, new Date());
+		const expireTime = new Date(new Date().getTime()+this.storageLifeTime);
+
+		Cookies.set(this.storageKey, '1', {expires: expireTime, path: '/'});
 
 		return;
 	}

@@ -21,7 +21,7 @@
 		"test": "karma start"
 	},
 	"dependencies": {
-		"crumbsjs": "^0.2.1",
+		"js-cookie": "^3.0.0",
 		"postcss": "^8.3.6"
 	},
 	"devDependencies": {
