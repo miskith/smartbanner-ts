@@ -20,7 +20,7 @@
 	},
 	"dependencies": {
 		"js-cookie": "^3.0.5",
-		"postcss": "^8.4.23"
+		"postcss": "^8.4.47"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.21.8",
