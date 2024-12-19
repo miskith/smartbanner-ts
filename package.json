@@ -19,31 +19,31 @@
 		"build": "webpack --config webpack.prod.js"
 	},
 	"dependencies": {
-		"js-cookie": "^3.0.5",
-		"postcss": "^8.4.23"
+		"js-cookie": "^3.0.5"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.21.8",
-		"@babel/preset-env": "^7.21.5",
-		"@types/node": "^20.1.2",
-		"autoprefixer": "^10.4.14",
-		"babel-loader": "^9.1.2",
+		"@babel/core": "^7.26.0",
+		"@babel/preset-env": "^7.26.0",
+		"@types/node": "^22.10.2",
+		"autoprefixer": "^10.4.20",
+		"babel-loader": "^9.2.1",
 		"core-js": "3",
-		"css-loader": "^6.7.3",
-		"css-minimizer-webpack-plugin": "^5.0.0",
-		"mini-css-extract-plugin": "^2.7.5",
-		"postcss-loader": "^7.3.0",
-		"sass": "^1.62.1",
-		"sass-loader": "^13.2.2",
-		"terser-webpack-plugin": "^5.3.8",
-		"ts-loader": "^9.4.2",
-		"ts-node": "^10.9.1",
-		"tslib": "^2.5.0",
-		"typescript": "^5.0.4",
-		"webpack": "^5.82.1",
-		"webpack-cli": "^5.1.1",
-		"webpack-dev-middleware": "^6.1.0",
-		"webpack-merge": "^5.8.0"
+		"css-loader": "^7.1.2",
+		"css-minimizer-webpack-plugin": "^7.0.0",
+		"mini-css-extract-plugin": "^2.9.2",
+		"postcss": "^8.4.49",
+		"postcss-loader": "^8.1.1",
+		"sass": "^1.83.0",
+		"sass-loader": "^16.0.4",
+		"terser-webpack-plugin": "^5.3.11",
+		"ts-loader": "^9.5.1",
+		"ts-node": "^10.9.2",
+		"tslib": "^2.8.1",
+		"typescript": "^5.7.2",
+		"webpack": "^5.97.1",
+		"webpack-cli": "^5.1.4",
+		"webpack-dev-middleware": "^7.4.2",
+		"webpack-merge": "^6.0.1"
 	},
 	"postcss": {
 		"plugins": {
