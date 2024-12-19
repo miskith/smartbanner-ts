@@ -4,18 +4,17 @@ const ProgressPlugin = require('webpack').ProgressPlugin;
 
 module.exports = {
 	entry: {
-		'smartbanner': [
-			// TS
+		smartbanner: [
 			'./assets/ts/components/smartbanner.ts',
-			// Scss
 			'./assets/scss/smartbanner.scss',
 		],
 	},
 	output: {
-		filename: 'js/[name].min.js',
-		chunkFilename: 'js/[name].[contenthash].min.js',
-		path: path.resolve(__dirname, './dist/'),
+		filename: '[name].min.js',
+		chunkFilename: '[name].[contenthash].min.js',
+		path: path.resolve(__dirname, './dist'),
 		publicPath: '/',
+		clean: true,
 	},
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js'],
@@ -32,8 +31,17 @@ module.exports = {
 							url: false,
 						},
 					},
-					'postcss-loader',
-					'sass-loader',
+					{
+						loader: 'postcss-loader',
+						options: {
+							postcssOptions: {
+								plugins: ['autoprefixer'],
+							},
+						},
+					},
+					{
+						loader: 'sass-loader',
+					},
 				],
 			},
 		],
@@ -43,7 +51,8 @@ module.exports = {
 	},
 	plugins: [
 		new MiniCssExtractPlugin({
-			filename: 'css/[name].min.css',
+			filename: '[name].min.css',
+			chunkFilename: '[name].[contenthash].min.css',
 		}),
 		new ProgressPlugin(),
 	],

@@ -3,7 +3,7 @@ import type { smartbannerOptions } from '../interfaces/smartbannerOptions';
 
 export class SmartBanner
 {
-	private node: Node = null;
+	private node: Node | null = null;
 	private readonly storageKey = 'smartbanner-ts';
 	private readonly storageLifeTime = 30*24*60*60*1000;
 
@@ -18,7 +18,7 @@ export class SmartBanner
 				closeButton: 'Close',
 			},
 			...this.config,
-		};
+		} as smartbannerOptions;
 
 		if (
 			(this.config.enable.android===false && this.config.enable.ios===false) ||
@@ -72,9 +72,9 @@ export class SmartBanner
 		const closeButton = document.createElement('button');
 		closeButton.type = 'button';
 		closeButton.className = 'smartbanner-ts__close';
-		closeButton.title = (typeof this.config.closeButton==='string' ? this.config.closeButton : this.config.closeButton[platform]);
+		closeButton.title = (typeof this.config.closeButton==='string' ? this.config.closeButton : this.config.closeButton![platform]);
 		closeButton.setAttribute('role', 'button');
-		closeButton.setAttribute('aria-label', (typeof this.config.closeButton==='string' ? this.config.closeButton : this.config.closeButton[platform]));
+		closeButton.setAttribute('aria-label', (typeof this.config.closeButton==='string' ? this.config.closeButton : this.config.closeButton![platform]));
 		closeButton.addEventListener('click', () => {
 			this.closeBanner();
 		});
@@ -124,8 +124,8 @@ export class SmartBanner
 		installButton.target = '_blank';
 		installButton.className = 'smartbanner-ts__install';
 		installButton.setAttribute('role', 'button');
-		installButton.setAttribute('aria-label', (typeof this.config.installButton==='string' ? this.config.installButton : this.config.installButton[platform]));
-		installButton.innerText = (typeof this.config.installButton==='string' ? this.config.installButton : this.config.installButton[platform]);
+		installButton.setAttribute('aria-label', (typeof this.config.installButton==='string' ? this.config.installButton : this.config.installButton![platform]));
+		installButton.innerText = (typeof this.config.installButton==='string' ? this.config.installButton : this.config.installButton![platform]);
 		installButton.addEventListener('click', () => {
 			setTimeout(() => {
 				this.closeBanner();
