@@ -1,5 +1,8 @@
 import Cookies from 'js-cookie';
-import type { ISmartbannerOptions, TSmartBannerOptionItem } from '../interfaces/smartbannerOptions';
+import type {
+	ISmartbannerOptions,
+	TSmartBannerOptionItem,
+} from '../interfaces/smartbannerOptions.js';
 
 export class SmartBanner {
 	private node: HTMLElement | null = null;
@@ -65,7 +68,7 @@ export class SmartBanner {
 			this.createCloseButton(platform),
 			this.createImageContainer(platform),
 			this.createContentContainer(platform),
-			this.createInstallButton(platform)
+			this.createInstallButton(platform),
 		];
 
 		wrapper.append(...elements);
@@ -80,7 +83,7 @@ export class SmartBanner {
 			type: 'button',
 			role: 'button',
 			title,
-			'aria-label': title
+			'aria-label': title,
 		});
 
 		button.addEventListener('click', this.closeBanner.bind(this));
@@ -106,9 +109,11 @@ export class SmartBanner {
 
 		const elements: HTMLElement[] = [
 			this.createTextElement('smartbanner-ts__title', this.config.title, platform),
-			this.config.author && this.createTextElement('smartbanner-ts__author', this.config.author, platform),
-			this.config.subTitle && this.createTextElement('smartbanner-ts__subtitle', this.config.subTitle, platform),
-			this.createTextElement('smartbanner-ts__price', this.config.price, platform)
+			this.config.author &&
+				this.createTextElement('smartbanner-ts__author', this.config.author, platform),
+			this.config.subTitle &&
+				this.createTextElement('smartbanner-ts__subtitle', this.config.subTitle, platform),
+			this.createTextElement('smartbanner-ts__price', this.config.price, platform),
 		].filter(Boolean) as HTMLElement[];
 
 		container.append(...elements);
@@ -130,14 +135,22 @@ export class SmartBanner {
 		return button;
 	}
 
-	private createTextElement(className: string, value: TSmartBannerOptionItem, platform: 'android' | 'ios'): HTMLElement {
+	private createTextElement(
+		className: string,
+		value: TSmartBannerOptionItem,
+		platform: 'android' | 'ios',
+	): HTMLElement {
 		const text = this.getLocalizedValue(value, platform);
 		const element = this.createElement('div', className);
 		element.innerText = text;
 		return element;
 	}
 
-	private createElement(tag: string, className: string, attributes: Record<string, string> = {}): HTMLElement {
+	private createElement(
+		tag: string,
+		className: string,
+		attributes: Record<string, string> = {},
+	): HTMLElement {
 		const element = document.createElement(tag);
 		element.className = className;
 
@@ -146,7 +159,10 @@ export class SmartBanner {
 		return element;
 	}
 
-	private getLocalizedValue(value: TSmartBannerOptionItem | undefined, platform: 'android' | 'ios'): string {
+	private getLocalizedValue(
+		value: TSmartBannerOptionItem | undefined,
+		platform: 'android' | 'ios',
+	): string {
 		if (!value) {
 			return '';
 		}
@@ -161,7 +177,7 @@ export class SmartBanner {
 
 			Cookies.set(this.storageKey, '1', {
 				expires: new Date(Date.now() + this.storageLifeTime),
-				path: '/'
+				path: '/',
 			});
 		}
 	}

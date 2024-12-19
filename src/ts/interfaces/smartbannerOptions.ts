@@ -1,7 +1,6 @@
-export type TSmartBannerOptionItem = string | { android: string; ios: string; };
+export type TSmartBannerOptionItem = string | { android: string; ios: string };
 
-export interface ISmartbannerOptions
-{
+export interface ISmartbannerOptions {
 	title: TSmartBannerOptionItem;
 	subTitle?: TSmartBannerOptionItem;
 	price: TSmartBannerOptionItem;
