@@ -1,7 +1,6 @@
 const path = require('path');
-const webpack = require('webpack');
-const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ProgressPlugin = require('webpack').ProgressPlugin;
 
 module.exports = {
 	entry: {
@@ -14,12 +13,12 @@ module.exports = {
 	},
 	output: {
 		filename: 'js/[name].min.js',
-		chunkFilename: 'js/[name].min.js',
+		chunkFilename: 'js/[name].[contenthash].min.js',
 		path: path.resolve(__dirname, './dist/'),
 		publicPath: '/',
 	},
 	resolve: {
-		extensions: ['.ts', '.tsx', '.js']
+		extensions: ['.ts', '.tsx', '.js'],
 	},
 	module: {
 		rules: [
@@ -34,27 +33,18 @@ module.exports = {
 						},
 					},
 					'postcss-loader',
-					'sass-loader'
+					'sass-loader',
 				],
 			},
-			{
-				test: /\.(ts|tsx)$/i,
-				use: [
-					'ts-loader',
-				],
-			},
-		]
+		],
+	},
+	cache: {
+		type: 'filesystem',
 	},
 	plugins: [
 		new MiniCssExtractPlugin({
 			filename: 'css/[name].min.css',
 		}),
-		new webpack.LoaderOptionsPlugin({
-			options: {
-				postcss: [
-					autoprefixer(),
-				],
-			},
-		}),
+		new ProgressPlugin(),
 	],
 };
