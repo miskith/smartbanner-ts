@@ -1,2 +1,2 @@
 export { SmartBanner } from './components/smartbanner';
-export type { smartbannerOptions } from './interfaces/smartbannerOptions';
+export type { ISmartbannerOptions } from './interfaces/smartbannerOptions';

@@ -1,155 +1,168 @@
 import Cookies from 'js-cookie';
-import type { smartbannerOptions } from '../interfaces/smartbannerOptions';
+import type { ISmartbannerOptions, TSmartBannerOptionItem } from '../interfaces/smartbannerOptions';
 
-export class SmartBanner
-{
-	private node: Node | null = null;
+export class SmartBanner {
+	private node: HTMLElement | null = null;
 	private readonly storageKey = 'smartbanner-ts';
-	private readonly storageLifeTime = 30*24*60*60*1000;
+	private readonly storageLifeTime = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+	private readonly userAgent = window.navigator?.userAgent || '';
 
-	constructor(private config: smartbannerOptions)
-	{
+	constructor(private config: ISmartbannerOptions) {
 		this.config = {
-			...{
-				autoInit: true,
-				author: null,
-				subTitle: null,
-				installButton: 'Install',
-				closeButton: 'Close',
-			},
-			...this.config,
-		} as smartbannerOptions;
+			autoInit: true,
+			installButton: 'Install',
+			closeButton: 'Close',
+			...config,
+		};
 
-		if (
-			(this.config.enable.android===false && this.config.enable.ios===false) ||
-			(!window.navigator || !window.navigator.userAgent || !(new RegExp(this.userAgents.join('|'), 'i')).test(window.navigator.userAgent))
-		) {
-			return;
-		}
-
-		if (this.config.autoInit===true && this.keepClosed===false) {
+		if (this.shouldInitialize() && this.config.autoInit) {
 			this.run();
 		}
 	}
 
-	private get userAgents():string[]
-	{
-		const userAgents = [];
-		if (this.config.enable.android===true) {
-			userAgents.push('Android');
-		}
-		if (this.config.enable.ios===true) {
-			userAgents.push(...['iPhone', 'iPad', 'iPod']);
-		}
-
-		return userAgents;
+	private shouldInitialize(): boolean {
+		return this.isEnabledPlatform() && !this.isBannerClosed();
 	}
 
-	private get keepClosed():boolean
-	{
-		const closeDateString = Cookies.get(this.storageKey);
+	private isEnabledPlatform(): boolean {
+		const { enable } = this.config;
+		if (!enable.android && !enable.ios) {
+			return false;
+		}
 
-		return !!(closeDateString)
+		const platforms: string[] = [
+			...(enable.android ? ['Android'] : []),
+			...(enable.ios ? ['iPhone', 'iPad', 'iPod'] : []),
+		];
+
+		return platforms.some((platform: string) => this.userAgent.includes(platform));
 	}
 
-	public run(platform: 'android'|'ios'|null = null):void
-	{
-		if (platform===null) {
-			platform = (new RegExp('Android', 'i').test(window.navigator.userAgent) ? 'android' : 'ios');
-		}
-
-		this.node = this.generateNode(platform);
-		document.body.insertBefore(this.node, document.body.firstChild);
-
-		return;
+	private isBannerClosed(): boolean {
+		return Boolean(Cookies.get(this.storageKey));
 	}
 
-	private generateNode(platform: 'android'|'ios'):Node
-	{
-		const wrapper = document.createElement('div');
-		wrapper.className = 'smartbanner-ts is-'+platform;
+	public run(platform: 'android' | 'ios' | null = null): void {
+		platform = platform || this.detectPlatform() || 'ios';
+		this.node = this.createBannerNode(platform);
+		document.body.prepend(this.node);
+	}
 
-		const closeButton = document.createElement('button');
-		closeButton.type = 'button';
-		closeButton.className = 'smartbanner-ts__close';
-		closeButton.title = (typeof this.config.closeButton==='string' ? this.config.closeButton : this.config.closeButton![platform]);
-		closeButton.setAttribute('role', 'button');
-		closeButton.setAttribute('aria-label', (typeof this.config.closeButton==='string' ? this.config.closeButton : this.config.closeButton![platform]));
-		closeButton.addEventListener('click', () => {
-			this.closeBanner();
-		});
-		wrapper.appendChild(closeButton);
-
-		const imageContainer = document.createElement('figure');
-		imageContainer.className = 'smartbanner-ts__image-container';
-		wrapper.appendChild(imageContainer);
-
-		const image = document.createElement('img');
-		image.className = 'smartbanner-ts__image';
-		image.alt = (typeof this.config.title==='string' ? this.config.title : this.config.title[platform]);
-		image.title = (typeof this.config.title==='string' ? this.config.title : this.config.title[platform]);
-		image.src = (typeof this.config.icon==='string' ? this.config.icon : this.config.icon[platform]);
-		imageContainer.appendChild(image);
-
-		const container = document.createElement('div');
-		container.className = 'smartbanner-ts__container';
-		wrapper.appendChild(container);
-
-		const title = document.createElement('div');
-		title.className = 'smartbanner-ts__title';
-		title.innerText = (typeof this.config.title==='string' ? this.config.title : this.config.title[platform]);
-		container.appendChild(title);
-
-		if (!!this.config.author) {
-			const author = document.createElement('div');
-			author.className = 'smartbanner-ts__author';
-			author.innerText = (typeof this.config.author==='string' ? this.config.author : this.config.author[platform]);
-			container.appendChild(author);
+	private detectPlatform(): 'android' | 'ios' | null {
+		if (/Android/i.test(this.userAgent)) {
+			return 'android';
 		}
-
-		if (!!this.config.subTitle) {
-			const subTitle = document.createElement('div');
-			subTitle.className = 'smartbanner-ts__subtitle';
-			subTitle.innerText = (typeof this.config.subTitle==='string' ? this.config.subTitle : this.config.subTitle[platform]);
-			container.appendChild(subTitle);
+		if (/iPhone|iPad|iPod/i.test(this.userAgent)) {
+			return 'ios';
 		}
+		return null;
+	}
 
-		const price = document.createElement('div');
-		price.className = 'smartbanner-ts__price';
-		price.innerText = (typeof this.config.price==='string' ? this.config.price : this.config.price[platform]);
-		container.appendChild(price);
+	private createBannerNode(platform: 'android' | 'ios'): HTMLElement {
+		const wrapper = this.createElement('div', `smartbanner-ts is-${platform}`);
 
-		const installButton = document.createElement('a');
-		installButton.href = this.config.link[platform];
-		installButton.target = '_blank';
-		installButton.className = 'smartbanner-ts__install';
-		installButton.setAttribute('role', 'button');
-		installButton.setAttribute('aria-label', (typeof this.config.installButton==='string' ? this.config.installButton : this.config.installButton![platform]));
-		installButton.innerText = (typeof this.config.installButton==='string' ? this.config.installButton : this.config.installButton![platform]);
-		installButton.addEventListener('click', () => {
-			setTimeout(() => {
-				this.closeBanner();
-			});
-		});
-		wrapper.appendChild(installButton);
+		const elements: HTMLElement[] = [
+			this.createCloseButton(platform),
+			this.createImageContainer(platform),
+			this.createContentContainer(platform),
+			this.createInstallButton(platform)
+		];
+
+		wrapper.append(...elements);
 
 		return wrapper;
 	}
 
-	private closeBanner():void
-	{
-		if (this.node===null) {
-			return;
-		}
+	private createCloseButton(platform: 'android' | 'ios'): HTMLElement {
+		const title = this.getLocalizedValue(this.config.closeButton, platform);
 
-		document.body.removeChild(this.node);
-		this.node = null;
+		const button = this.createElement('button', 'smartbanner-ts__close', {
+			type: 'button',
+			role: 'button',
+			title,
+			'aria-label': title
+		});
 
-		const expireTime = new Date(new Date().getTime()+this.storageLifeTime);
+		button.addEventListener('click', this.closeBanner.bind(this));
 
-		Cookies.set(this.storageKey, '1', {expires: expireTime, path: '/'});
-
-		return;
+		return button;
 	}
 
+	private createImageContainer(platform: 'android' | 'ios'): HTMLElement {
+		const container = this.createElement('figure', 'smartbanner-ts__image-container');
+		const img = this.createElement('img', 'smartbanner-ts__image', {
+			alt: this.getLocalizedValue(this.config.title, platform),
+			title: this.getLocalizedValue(this.config.title, platform),
+			src: this.getLocalizedValue(this.config.icon, platform),
+		});
+
+		container.appendChild(img);
+
+		return container;
+	}
+
+	private createContentContainer(platform: 'android' | 'ios'): HTMLElement {
+		const container = this.createElement('div', 'smartbanner-ts__container');
+
+		const elements: HTMLElement[] = [
+			this.createTextElement('smartbanner-ts__title', this.config.title, platform),
+			this.config.author && this.createTextElement('smartbanner-ts__author', this.config.author, platform),
+			this.config.subTitle && this.createTextElement('smartbanner-ts__subtitle', this.config.subTitle, platform),
+			this.createTextElement('smartbanner-ts__price', this.config.price, platform)
+		].filter(Boolean) as HTMLElement[];
+
+		container.append(...elements);
+
+		return container;
+	}
+
+	private createInstallButton(platform: 'android' | 'ios'): HTMLElement {
+		const text = this.getLocalizedValue(this.config.installButton, platform);
+		const button = this.createElement('a', 'smartbanner-ts__install', {
+			href: this.config.link[platform],
+			target: '_blank',
+			role: 'button',
+			'aria-label': text,
+		});
+		button.innerText = text;
+		button.addEventListener('click', () => setTimeout(this.closeBanner.bind(this)));
+
+		return button;
+	}
+
+	private createTextElement(className: string, value: TSmartBannerOptionItem, platform: 'android' | 'ios'): HTMLElement {
+		const text = this.getLocalizedValue(value, platform);
+		const element = this.createElement('div', className);
+		element.innerText = text;
+		return element;
+	}
+
+	private createElement(tag: string, className: string, attributes: Record<string, string> = {}): HTMLElement {
+		const element = document.createElement(tag);
+		element.className = className;
+
+		Object.assign(element, attributes);
+
+		return element;
+	}
+
+	private getLocalizedValue(value: TSmartBannerOptionItem | undefined, platform: 'android' | 'ios'): string {
+		if (!value) {
+			return '';
+		}
+
+		return typeof value === 'string' ? value : value[platform] || '';
+	}
+
+	private closeBanner(): void {
+		if (this.node) {
+			document.body.removeChild(this.node);
+			this.node = null;
+
+			Cookies.set(this.storageKey, '1', {
+				expires: new Date(Date.now() + this.storageLifeTime),
+				path: '/'
+			});
+		}
+	}
 }

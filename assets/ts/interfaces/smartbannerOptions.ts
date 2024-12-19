@@ -1,21 +1,11 @@
-export interface smartbannerOptions
+export type TSmartBannerOptionItem = string | { android: string; ios: string; };
+
+export interface ISmartbannerOptions
 {
-	title: string|{
-		android: string;
-		ios: string;
-	};
-	subTitle?: string|{
-		android: string;
-		ios: string;
-	};
-	price: string|{
-		android: string;
-		ios: string;
-	};
-	icon: string|{
-		android: string;
-		ios: string;
-	};
+	title: TSmartBannerOptionItem;
+	subTitle?: TSmartBannerOptionItem;
+	price: TSmartBannerOptionItem;
+	icon: TSmartBannerOptionItem;
 	link: {
 		android: string;
 		ios: string;
@@ -25,16 +15,7 @@ export interface smartbannerOptions
 		ios: boolean;
 	};
 	autoInit?: boolean;
-	author?: string|{
-		android: string;
-		ios: string;
-	};
-	installButton?: string|{
-		android: string;
-		ios: string;
-	};
-	closeButton?: string|{
-		android: string;
-		ios: string;
-	};
+	author?: TSmartBannerOptionItem;
+	installButton?: TSmartBannerOptionItem;
+	closeButton?: TSmartBannerOptionItem;
 }
